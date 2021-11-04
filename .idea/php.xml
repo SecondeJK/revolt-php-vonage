@@ -22,6 +22,7 @@
       <path value="$PROJECT_DIR$/vendor/psr/http-server-middleware" />
       <path value="$PROJECT_DIR$/vendor/psr/http-server-handler" />
       <path value="$PROJECT_DIR$/vendor/slim/slim" />
+      <path value="$PROJECT_DIR$/vendor/fakerphp/faker" />
     </include_path>
   </component>
   <component name="PhpProjectSharedConfiguration" php_language_level="7.2" />

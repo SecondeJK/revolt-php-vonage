@@ -35,6 +35,7 @@
     "vonage/client-core": "^2.0",
     "slim/slim": "^4.9",
     "guzzlehttp/psr7": "^2.1",
-    "ext-json": "*"
+    "ext-json": "*",
+    "fakerphp/faker": "^1.16"
   }
 }
