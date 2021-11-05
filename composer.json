@@ -30,12 +30,13 @@
     "email": "devrel@nexmo.com"
   },
   "require": {
-    "php": ">=7.2",
+    "php": ">=8",
     "guzzlehttp/guzzle": "^7.0",
     "vonage/client-core": "^2.0",
     "slim/slim": "^4.9",
     "guzzlehttp/psr7": "^2.1",
     "ext-json": "*",
-    "fakerphp/faker": "^1.16"
+    "fakerphp/faker": "^1.16",
+    "revolt/event-loop": "dev-main"
   }
 }
