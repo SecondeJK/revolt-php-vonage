@@ -54,8 +54,8 @@ $app->get('/emergencyNotification', function (Request $request, Response $respon
     $faker = Faker\Factory::create('en_GB');
     $phoneNumbers = [];
 
-    for ($i = 0; $i < 4001; $i++) {
-        sleep(1);
+    for ($i = 0; $i < 1200; $i++) {
+        sleep(0.25);
         $phoneNumbers[] = $faker->phoneNumber();
     }
 
@@ -83,6 +83,28 @@ $app->get('/emergencyNotification', function (Request $request, Response $respon
 
     $time = (getmicrotime($endTime) - getmicrotime($startTime));
     $response->getBody()->write('Completed function in: ' . $time);
+
+    return $response;
+});
+
+$app->get('/test', function (Request $request, Response $response) use ($vonage) {
+    $outboundCall = new OutboundCall(
+        new Phone('+44XXXXXX'),
+        new Phone('+447451284518')
+    );
+
+    $outboundCall
+        ->setAnswerWebhook(
+            new Webhook('https://aef9-82-30-208-179.ngrok.io/webhook/answer', 'GET')
+        )
+        ->setEventWebhook(
+            new Webhook('https://aef9-82-30-208-179.ngrok.io/webhook/event', 'GET')
+        )
+    ;
+
+    $outboundResponse = $vonage->voice()->createOutboundCall($outboundCall);
+
+    $response->getBody()->write('Outbound calls created.' . PHP_EOL);
 
     return $response;
 });
