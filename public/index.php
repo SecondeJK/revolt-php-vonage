@@ -20,7 +20,7 @@ function getmicrotime($t): float
 function fakeDatabaseCall(): string
 {
     $faker = Faker\Factory::create('en_GB');
-//    usleep(250000);
+    usleep(250000);
     return $faker->phoneNumber();
 }
 
@@ -55,7 +55,7 @@ $app->get('/webhook/answer', function (Request $request, Response $response) {
         ->withHeader('Content-Type', 'application/json');
 });
 
-$app->get('/emergencyNotification', function (Request $request, Response $response) use ($vonage) {
+$app->get('/emergencyNotificationRevolt', function (Request $request, Response $response) use ($vonage) {
     $startTime = microtime();
 
     // Let's pretend we have to go one at a time to get the phone number because of dataabase/ORM tech debt
@@ -90,6 +90,39 @@ $app->get('/emergencyNotification', function (Request $request, Response $respon
     $time = (getmicrotime($endTime) - getmicrotime($startTime));
     $response->getBody()->write('Completed function in: ' . $time);
 
+
+    return $response;
+});
+
+$app->get('/emergencyNotificationSync', function (Request $request, Response $response) use ($vonage) {
+    $startTime = microtime();
+
+    // Let's pretend we have to go one at a time to get the phone number because of dataabase/ORM tech debt
+    // we're going to create a ton of callbacks from this, then run the event loop
+    for ($i = 0; $i < 1200; $i++) {
+            $outboundNumber = fakeDatabaseCall();
+
+            $outboundCall = new OutboundCall(
+                new Phone($outboundNumber),
+                new Phone('+447451284518')
+            );
+
+            $outboundCall
+                ->setAnswerWebhook(
+                    new Webhook('https://aef9-82-30-208-179.ngrok.io/webhook/answer', 'GET')
+                )
+                ->setEventWebhook(
+                    new Webhook('https://aef9-82-30-208-179.ngrok.io/webhook/event', 'GET')
+                )
+                //    $outboundResponse = $vonage->voice()->createOutboundCall($outboundCall);
+            ;
+    }
+
+    $response->getBody()->write('Outbound calls created.' . PHP_EOL);
+    $endTime = microtime();
+
+    $time = (getmicrotime($endTime) - getmicrotime($startTime));
+    $response->getBody()->write('Completed function in: ' . $time);
 
     return $response;
 });
