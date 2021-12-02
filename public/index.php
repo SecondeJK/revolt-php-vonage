@@ -17,10 +17,20 @@ function getmicrotime($t): float
     return ((float)$usec + (float)$sec);
 }
 
+function async_sleep(float $seconds): void
+{
+    $suspension = EventLoop::createSuspension();
+    EventLoop::delay($seconds, fn() => $suspension->resume());
+
+    $suspension->suspend();
+}
+
 function fakeDatabaseCall(): string
 {
     $faker = Faker\Factory::create('en_GB');
-    usleep(250000);
+
+    async_sleep(0.25);
+
     return $faker->phoneNumber();
 }
 
